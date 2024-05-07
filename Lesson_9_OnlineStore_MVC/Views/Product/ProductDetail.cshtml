@@ -1,0 +1,25 @@
+﻿@model ProductViewModel
+
+
+<div class="container">
+	<h1>Product Detail</h1>
+	<div class="card">
+		<div class="card-body" style="display:flex;flex-direction:row;justify-content:space-between;">
+			<div>
+				<p><strong>Product Name:</strong> @Model.Name</p>
+				<p><strong>Description:</strong> @Model.Description</p>
+				<p><strong>Price:</strong> $@Model.Price</p>
+				<p><strong>Category:</strong> @Model.CategoryName</p>
+				<strong>Tags:</strong>
+				@foreach (Tag tag in Model.Tags)
+				{
+					<h6>@tag.Name</h6>
+				}
+			</div>
+			<img src="@Url.Action("GetImage","Product",new{id=Model.Id})" class="img-fluid" style="width:300px;height:250px;" />
+		</div>
+	</div>
+	<form asp-action="GetProducts" asp-controller="Product">
+		<button type="submit" class="btn btn-primary mt-3">Back to Products</button>
+	</form>
+</div>

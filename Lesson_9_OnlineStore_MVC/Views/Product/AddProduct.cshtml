@@ -1,0 +1,39 @@
+﻿@model NewProductViewModel
+
+
+
+<form method="post" enctype="multipart/form-data" asp-controller="Product" asp-action="AddProduct">
+	<div class="form-group">
+		<label asp-for="Name">Name:</label>
+		<input asp-for="Name" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="Description">Description:</label>
+		<textarea asp-for="Description" class="form-control"></textarea>
+	</div>
+	<div class="form-group">
+		<label asp-for="Price">Price:</label>
+		<input asp-for="Price" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="Image">Image:</label>
+		<input type="file" name="image" class="form-control-file" />
+	</div>
+	<div class="form-group">
+		<label asp-for="CategoryId">Category:</label>
+		<select asp-for="CategoryId" asp-items="@ViewBag.categories"></select>
+	</div>
+	<div class="form-group">
+		<label asp-for="Tags">Tags:</label>
+		@foreach (var tag in ViewBag.tags)
+		{
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="Tags" value="@tag.Value" />
+					@tag.Text
+				</label>
+			</div>
+		}
+	</div>
+	<button type="submit" class="btn btn-primary">Add Product</button>
+</form>

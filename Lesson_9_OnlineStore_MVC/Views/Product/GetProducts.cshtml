@@ -1,0 +1,50 @@
+﻿@model PaginatedList<ProductViewModel>
+
+
+
+
+
+<table class="table table-bordered table-hover">
+	<thead class="thead-dark">
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Image</th>
+			<th>Price</th>
+			<th>Category</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var product in Model)
+		{
+			<form asp-controller="Product" asp-action="ProductDetail">
+				<input type="hidden" value="@product.Id" />
+			<tr onclick="window.location='@Url.Action("ProductDetail", "Product", new { id = product.Id })';" style="cursor:pointer;">
+				<td>@product.Id</td>
+				<td>@product.Name</td>
+				<td>@product.Description</td>
+				<td><img class="img-fluid" style="max-width: 150px; max-height: 100px;" src="@Url.Action("GetImage","Product",new{id=product.Id})" alt="Product Image" /></td>
+				<td>@product.Price $</td>
+				<td>@product.CategoryName</td>
+			</tr>
+			</form>
+		}
+		@{
+			var prevDisabled = !Model.HasPreviousPage() ? "disabled" : "";
+			var nextDisabled = !Model.HasNextPage() ? "disabled" : "";
+		}
+
+		<a asp-action="GetProducts"
+		   asp-route-pageNumber="@(Model.PageIndex - 1)"
+		   class="btn btn-default @prevDisabled">
+			Previous
+		</a>
+		<a asp-action="GetProducts"
+		   asp-route-pageNumber="@(Model.PageIndex + 1)"
+		   class="btn btn-default @nextDisabled">
+			Next
+		</a>
+	</tbody>
+</table>
+
