@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+var addTagForm = document.getElementById("Add-Tag-Form")
+var showAddTagButton = document.getElementById("Show-Add-Tag")
 
-// Write your JavaScript code.
+addTagForm.style.display = "None";
+
+showAddTagButton.addEventListener("click", () => {
+    addTagForm.style.display = addTagForm.style.display === "none" ? "block" : "none"
+    showAddTagButton.innerText = showAddTagButton.innerText === "Add Tag" ? "Close" : "Add Tag"
+});

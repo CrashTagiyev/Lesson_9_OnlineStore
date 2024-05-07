@@ -1,6 +1,7 @@
 ﻿@model ProductViewModel
 
 
+
 <div class="container">
 	<h1>Product Detail</h1>
 	<div class="card">
@@ -19,7 +20,42 @@
 			<img src="@Url.Action("GetImage","Product",new{id=Model.Id})" class="img-fluid" style="width:300px;height:250px;" />
 		</div>
 	</div>
+
+
+	@{
+		var addTags = ViewBag.AddTags;
+	}
+
+
+	<form id="Add-Tag-Form" asp-controller="Product" asp-action="ProductDetail" method="post">
+		@if (addTags.Items.Count > 0)
+		{
+			<input type="hidden" name="productId" value="@Model.Id" />
+			<div class="form-group">
+				@foreach (var tag in addTags.Items)
+				{
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="tagIds" value="@tag.Id" />
+							@tag.Name
+						</label>
+					</div>
+				}
+			</div>
+			<button type="submit" class="btn-primary">Add tags</button>
+		}
+		else
+		{
+			<p>No tags left</p>
+		}
+	</form>
+
+
+	<button id="Show-Add-Tag" type="submit" class="btn-primary mt-1">Add Tag</button>
+
+
 	<form asp-action="GetProducts" asp-controller="Product">
 		<button type="submit" class="btn btn-primary mt-3">Back to Products</button>
 	</form>
 </div>
+

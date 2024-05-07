@@ -53,9 +53,43 @@ namespace Lesson_9_OnlineStore_MVC.Controllers
 				CategoryName = (await _categoryRepo.GetByIdAsync(product.CategoryId)).Name,
 				Tags = product.Tags.ToList()
 			};
+
+			List<Tag> tags = await _tagsRepo.GetAllAsync();
+			tags = tags.Where(t => !ProductDetail.Tags.Contains(t)).ToList();
+
+			List<SelectListItem> selectItems = new();
+
+			foreach (var tag in tags)
+			{
+				selectItems.Add(new SelectListItem { Value = tag.Id.ToString(), Text = tag.Name });
+			}
+
+			ViewBag.AddTags = new MultiSelectList(tags, "Value", "Text"); ;
+
 			return View(ProductDetail);
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> ProductDetail(int productId, IEnumerable<int> tagIds)
+		{
+			var product = await _productRepo.GetByIdLazyAsync(productId);
+			foreach (var tagId in tagIds)
+			{
+				product.Tags.Add(await _tagsRepo.GetByIdAsync(tagId));
+			}
+			await _productRepo.Update(product);
+			var ProductDetail = new ProductViewModel()
+			{
+				Id = product.Id,
+				Name = product.Name,
+				Description = product.Description,
+				Price = product.Price,
+				CategoryName = (await _categoryRepo.GetByIdAsync(product.CategoryId)).Name,
+				Tags = product.Tags.ToList()
+			};
+
+			return RedirectToAction("ProductDetail", ProductDetail);
+		}
 
 		[HttpGet]
 		public async Task<IActionResult> AddProduct()
@@ -105,12 +139,13 @@ namespace Lesson_9_OnlineStore_MVC.Controllers
 				Tags = new List<Tag>()
 			};
 
-			foreach (int tagId in product.Tags)
-			{
-				var tag = await _tagsRepo.GetByIdAsync(tagId);
-				if (tag != null)
-					newProduct.Tags.Add(tag);
-			}
+			if (product.Tags!=null)
+				foreach (int tagId in product.Tags)
+				{
+					var tag = await _tagsRepo.GetByIdAsync(tagId);
+					if (tag != null)
+						newProduct.Tags.Add(tag);
+				}
 
 			await _productRepo.AddAsync(newProduct);
 
